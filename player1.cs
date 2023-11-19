@@ -14,5 +14,6 @@ public class player1 : MonoBehaviour
     void Update()
     {
         여기에 추가
+        수정ㅇ후 보내기
     }
 }
