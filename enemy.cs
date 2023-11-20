@@ -10,5 +10,10 @@ public class enemy : MonoBehaviour
     public float CurHealth;
     public int attack;
 
+    Rigidbody rigid;
 
+    private void Awake()
+    {
+        rigid = GetComponent<Rigidbody>();
+    }
 }
