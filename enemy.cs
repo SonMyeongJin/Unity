@@ -16,4 +16,34 @@ public class enemy : MonoBehaviour
     {
         rigid = GetComponent<Rigidbody>();
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.tag == "bullet")
+        {
+            bullet bullet = other.GetComponent<bullet>();
+            CurHealth -= bullet.Damage;
+
+            Vector3 reactVec = other.transform.position - transform.position;
+
+            Debug.Log(CurHealth);
+            Destroy(other.gameObject);
+            StartCoroutine(Ondamage(reactVec));
+        }
+        if(other.tag == "Player")
+        {
+            player2 player = other.GetComponent<player2>();
+            
+            player.health -= attack;
+
+            Vector3 pushDirection = new Vector3(transform.position.x - other.transform.position.x, 0, transform.position.z - other.transform.position.z);
+
+            // 방향을 정규화합니다.
+            pushDirection.Normalize();
+            
+            rigid.AddForce(pushDirection * 10, ForceMode.Impulse);
+            rigid.AddTorque(Vector3.right, ForceMode.Impulse);
+            Debug.Log("적이 밀려나고 회전합ㄴㅣㄷㅏ;");
+        }
+    }
 }
