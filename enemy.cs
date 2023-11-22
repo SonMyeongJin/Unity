@@ -45,5 +45,27 @@ public class enemy : MonoBehaviour
             rigid.AddTorque(Vector3.right, ForceMode.Impulse);
             Debug.Log("적이 밀려나고 회전합ㄴㅣㄷㅏ;");
         }
+
+        IEnumerator Ondamage(Vector3 reactVec)
+    {
+        ChangeToNewSprite();
+
+        //reactVec = reactVec.normalized      
+        yield return new WaitForSeconds(0.5f);
+
+        if ( CurHealth >0 )
+        {
+            sp.sprite = issprite;
+        }
+        else
+        {
+            sp.sprite = deadsprite;
+            rigid.AddForce(reactVec * 1, ForceMode.Impulse);
+            nav.isStopped = true;
+
+            Destroy(gameObject, 10f);
+            kill++;
+        }
+    }
     }
 }
