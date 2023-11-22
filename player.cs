@@ -14,15 +14,23 @@ public class player : MonoBehaviour
         anim = GetComponent<Animator>();
     }
 
+    bool running;
+    bool jumping;
+
     void GetInput()
     {
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
+
+        jumping = Input.GetButtonDown("Jump");
+        running = Input.GetButton("Run");
     }
 
     void Update()
     {
+        GetInput();
         Move();
+        jump();
     }
 
     void Move()
@@ -52,5 +60,23 @@ public class player : MonoBehaviour
         transform.LookAt(transform.position + new Vector3(velocity.x, 0, velocity.z));
     }
   
+    public float JumpPower;
+    bool Isjump;
+
+    void jump()
+    {
+        if (jumping && !Isjump)
+        {
+            rigid.AddForce(Vector3.up * JumpPower, ForceMode.Impulse);
+            Isjump = true;
+        }
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "City")
+        {
+            Isjump = false; //점프 중에 또 점프 못하게 하려고
+        }
+    }
 }
        
