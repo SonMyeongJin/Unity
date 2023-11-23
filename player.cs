@@ -16,6 +16,7 @@ public class player : MonoBehaviour
 
     bool running;
     bool jumping;
+    bool eatWeapon;
 
     void GetInput()
     {
@@ -24,6 +25,7 @@ public class player : MonoBehaviour
 
         jumping = Input.GetButtonDown("Jump");
         running = Input.GetButton("Run");
+        eatWeapon = Input.GetButtonDown("Eat");
     }
 
     void Update()
@@ -31,6 +33,7 @@ public class player : MonoBehaviour
         GetInput();
         Move();
         jump();
+        eat();
     }
 
     void Move()
@@ -76,6 +79,23 @@ public class player : MonoBehaviour
         if (collision.gameObject.tag == "City")
         {
             Isjump = false; //점프 중에 또 점프 못하게 하려고
+        }
+    }
+
+    GameObject nearObject;
+
+    public GameObject[] weapon;
+    public bool[] hasweapon;
+
+    void eat()
+    {
+        if(eatWeapon && nearObject != null )
+        {
+            Item item = nearObject.GetComponent<Item>();
+            int number = item.number;
+            hasweapon[number] = true;
+
+            Destroy(nearObject);
         }
     }
 }
