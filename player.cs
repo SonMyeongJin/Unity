@@ -17,6 +17,8 @@ public class player : MonoBehaviour
     bool running;
     bool jumping;
     bool eatWeapon;
+    bool swap1;
+    bool swap2;
 
     void GetInput()
     {
@@ -26,6 +28,8 @@ public class player : MonoBehaviour
         jumping = Input.GetButtonDown("Jump");
         running = Input.GetButton("Run");
         eatWeapon = Input.GetButtonDown("Eat");
+        swap1 = Input.GetButtonDown("Swap1");
+        swap2 = Input.GetButtonDown("Swap2");
     }
 
     void Update()
@@ -34,6 +38,7 @@ public class player : MonoBehaviour
         Move();
         jump();
         eat();
+        swap();
     }
 
     void Move()
@@ -96,6 +101,30 @@ public class player : MonoBehaviour
             hasweapon[number] = true;
 
             Destroy(nearObject);
+        }
+    }
+
+    weapon equipWeapon;
+    
+    void swap()
+    {
+        int Index = -1;
+        if (swap1) Index = 0;
+        if (swap2) Index = 1;
+        if (swap1 && !hasweapon[0])
+            return;
+        if (swap2 && !hasweapon[1])
+            return;
+
+        if (swap1||swap2 && !jumping)
+        {
+            if (equipWeapon != null)
+            {
+                equipWeapon.gameObject.SetActive(false);
+            }
+
+            equipWeapon = weapon[Index].GetComponent<weapon>();
+            weapon[Index].SetActive(true);
         }
     }
 }
