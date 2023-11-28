@@ -19,6 +19,7 @@ public class player : MonoBehaviour
     bool eatWeapon;
     bool swap1;
     bool swap2;
+    bool shooting;
 
     void GetInput()
     {
@@ -30,6 +31,7 @@ public class player : MonoBehaviour
         eatWeapon = Input.GetButtonDown("Eat");
         swap1 = Input.GetButtonDown("Swap1");
         swap2 = Input.GetButtonDown("Swap2");
+        shooting = Input.GetButtonDown("Fire1");
     }
 
     void Update()
@@ -39,6 +41,7 @@ public class player : MonoBehaviour
         jump();
         eat();
         swap();
+        shoot();
     }
 
     void Move()
@@ -105,7 +108,7 @@ public class player : MonoBehaviour
     }
 
     weapon equipWeapon;
-    
+
     void swap()
     {
         int Index = -1;
@@ -127,5 +130,20 @@ public class player : MonoBehaviour
             weapon[Index].SetActive(true);
         }
     }
-}
+    
+    public float fireDelay;
+    bool fireReady;
+
+    void shoot()
+    {
+        fireDelay += Time.deltaTime;
+        fireReady = equipWeapon.rate < fireDelay;
+
+        if(shooting && fireReady && !running && !swap1 && !swap2)
+        {
+            equipWeapon.use();
+            anim.SetTrigger("DoShoot");
+            fireDelay = 0; 
+        }
+    }
        
