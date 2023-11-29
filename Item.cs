@@ -6,6 +6,7 @@ public class Item : MonoBehaviour
 {
     public enum Type { aGun, bGun, bag, guncase, ball1,ball2, health }
     public Type Itemtype;
+    public int number;
 
     void Update()
     {

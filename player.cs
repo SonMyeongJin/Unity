@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class player : MonoBehaviour
 {
+    public float moveSpeed = 5.0f; 
+    public Camera playerCamera; 
+    float horizontalInput;
+    float verticalInput;
 
     Animator anim;
     Rigidbody rigid;
@@ -20,6 +24,7 @@ public class player : MonoBehaviour
     bool swap1;
     bool swap2;
     bool shooting;
+    bool reroad;
 
     void GetInput()
     {
@@ -32,43 +37,48 @@ public class player : MonoBehaviour
         swap1 = Input.GetButtonDown("Swap1");
         swap2 = Input.GetButtonDown("Swap2");
         shooting = Input.GetButtonDown("Fire1");
+        reroad = Input.GetButtonDown("Reroad");
     }
 
     void Update()
     {
-        GetInput();
-        Move();
-        jump();
-        eat();
-        swap();
-        shoot();
+        if (!dead)
+        {
+            GetInput();
+            Move();
+            jump();
+            eat();
+            swap();
+            shoot();
+            reroading();
+        }
+        die();
     }
 
     void Move()
     {
-        public float moveSpeed = 5.0f; // 이동 속도
-        public Camera playerCamera; // 3인칭 카메라
-        float horizontalInput;
-        float verticalInput;
-        // 카메라가 바라보는 방향을 기준으로 이동 벡터 계산
-        Vector3 cameraForward = playerCamera.transform.forward;
-        cameraForward.y = 0; // 수직 이동 방지
-        Vector3 moveDirection = cameraForward.normalized;
+        if( !isreroad )
+        {
+            // 카메라가 바라보는 방향을 기준으로 이동 벡터 계산
+            Vector3 cameraForward = playerCamera.transform.forward;
+            cameraForward.y = 0; // 수직 이동 방지
+            Vector3 moveDirection = cameraForward.normalized;
 
-        // 키 입력으로 이동
-        Vector3 movement = (moveDirection * verticalInput + playerCamera.transform.right * horizontalInput).normalized;
+            // 키 입력으로 이동
+            Vector3 movement = (moveDirection * verticalInput + playerCamera.transform.right * horizontalInput).normalized;
 
-        // 이동 벡터에 이동 속도를 곱하여 속도 벡터 생성
-        Vector3 velocity = movement * moveSpeed;
+            // 이동 벡터에 이동 속도를 곱하여 속도 벡터 생성
+            Vector3 velocity = movement * moveSpeed;
 
-        // Rigidbody를 사용하여 이동
-        rigid.velocity = new Vector3(velocity.x, rigid.velocity.y, velocity.z);
+            // Rigidbody를 사용하여 이동
+            rigid.velocity = new Vector3(velocity.x, rigid.velocity.y, velocity.z);
 
 
-        anim.SetBool("Walk", !(horizontalInput == 0 && verticalInput == 0));
-        anim.SetBool("Run", running);
+            anim.SetBool("Walk", !(horizontalInput == 0 && verticalInput == 0));
+            anim.SetBool("Run", running);
 
-        transform.LookAt(transform.position + new Vector3(velocity.x, 0, velocity.z));
+            transform.LookAt(transform.position + new Vector3(velocity.x, 0, velocity.z));
+        }
     }
   
     public float JumpPower;
@@ -146,4 +156,37 @@ public class player : MonoBehaviour
             fireDelay = 0; 
         }
     }
-       
+
+    bool isreroad;
+    void reroading()
+    {
+        if (equipWeapon == null)
+            return;
+
+        if (running || swap1 || swap2)
+            return;
+        if (ammo1 == 0 && ammo2 == 0)
+            return;
+        if(reroad)
+        {
+            anim.SetTrigger("DoRoad");
+            isreroad = true;
+
+            Invoke("reroadout", 2f);
+        }
+
+
+    }
+
+    void reroadout()
+    {
+        int reAmmo1 = ammo1 < equipWeapon.maxAmmo ? ammo1 : equipWeapon.maxAmmo;
+        equipWeapon.curAmmo = reAmmo1;
+        ammo1 -= reAmmo1;
+        int reAmmo2 = ammo2 < equipWeapon.maxAmmo ? ammo2 : equipWeapon.maxAmmo;
+        equipWeapon.curAmmo = reAmmo2;
+        ammo2 -= reAmmo2;
+
+        isreroad = false;
+    }
+}       
