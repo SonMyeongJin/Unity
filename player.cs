@@ -189,4 +189,25 @@ public class player : MonoBehaviour
 
         isreroad = false;
     }
+
+    void alive()
+    {
+        dead = false;
+    }
+
+    bool dead = false;
+    void die()
+    {
+        Debug.Log("다이함수안에 들어왔어 ");
+        if(health <= 0 && !dead)
+        {
+            Debug.Log("다이함수 안에 이프문 안에 들어왔어 ");
+            anim.SetTrigger("DoDie");
+
+            rigid.velocity = Vector3.zero;
+            rigid.isKinematic = true;
+
+            dead = true;
+        }
+    }
 }       
