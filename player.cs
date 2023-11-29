@@ -140,6 +140,42 @@ public class player : MonoBehaviour
             weapon[Index].SetActive(true);
         }
     }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if(other.tag == "Weapon")
+        {
+            nearObject = other.gameObject;
+
+        }
+
+       if(other.tag == "enemy")
+        {
+            Debug.Log("플레이어가 밀려납니다 ");
+            Vector3 pushDirection = new Vector3(transform.position.x - other.transform.position.x, 0, transform.position.z - other.transform.position.z);
+
+            pushDirection.Normalize();
+
+            
+            rigid.AddForce(pushDirection * 5, ForceMode.Impulse);
+            dead = true;
+            Invoke("alive", 3f);
+            anim.SetTrigger("DoBack");
+        }
+        if (other.tag == "boss")
+        {
+            Debug.Log("플레이어가 밀려납니다 ");
+            Vector3 pushDirection = new Vector3(transform.position.x - other.transform.position.x, 0, transform.position.z - other.transform.position.z);
+
+            pushDirection.Normalize();
+
+
+            rigid.AddForce(pushDirection * 30, ForceMode.Impulse);
+            dead = true;
+            Invoke("alive", 4f);
+            anim.SetTrigger("DoBack");
+        }
+    }
     
     public float fireDelay;
     bool fireReady;
