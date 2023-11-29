@@ -9,12 +9,31 @@ public class enemy : MonoBehaviour
     public float MaxHealth;
     public float CurHealth;
     public int attack;
-
+    public Transform target;
+    bool chasing;
+    NavMeshAgent nav;
     Rigidbody rigid;
 
     private void Awake()
     {
         rigid = GetComponent<Rigidbody>();
+        nav = GetComponent<NavMeshAgent>();
+        sp = GetComponent<SpriteRenderer>();
+
+        Invoke("chaseStart", 2f);
+    }
+
+    void chaseStart()
+    {
+        chasing = true;
+    }
+
+    private void Update()
+    {
+        if (chasing)
+        {
+            nav.SetDestination(target.position);
+        }
     }
 
     private void OnTriggerEnter(Collider other)
