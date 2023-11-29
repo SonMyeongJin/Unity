@@ -157,6 +157,41 @@ public class player : MonoBehaviour
         }
     }
 
+    public int ammo1;
+    public int ammo2;
+    public int health = 100;
+
+    public int maxAmmo1;
+    public int maxAmmo2;
+    public int maxHealth = 100;
+
+    public void OnTriggerEnter(Collider other)
+    {
+        if(other.tag == "Item")
+        {
+            Item item = other.GetComponent<Item>();
+            switch(item.Itemtype)
+            {
+                case Item.Type.ball1:
+                    ammo1 += item.number;
+                    if (ammo1 > maxAmmo1)
+                        ammo1 = maxAmmo1;
+                    break;
+                case Item.Type.ball2:
+                    ammo2 += item.number;
+                    if (ammo2 > maxAmmo2)
+                        ammo2 = maxAmmo2;
+                    break;
+                case Item.Type.health:
+                    health += item.number;
+                    if (health > maxHealth)
+                        health = maxHealth;
+                    break;
+            }
+            Destroy(other.gameObject);
+        }
+    }
+
     bool isreroad;
     void reroading()
     {
