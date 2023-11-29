@@ -14,11 +14,17 @@ public class enemy : MonoBehaviour
     NavMeshAgent nav;
     Rigidbody rigid;
 
+    public Sprite attacksprite;
+    public Sprite deadsprite;
+    SpriteRenderer sp;
+    Sprite issprite;
+
     private void Awake()
     {
         rigid = GetComponent<Rigidbody>();
         nav = GetComponent<NavMeshAgent>();
         sp = GetComponent<SpriteRenderer>();
+        issprite = this.sp.sprite;
 
         Invoke("chaseStart", 2f);
     }
@@ -64,6 +70,7 @@ public class enemy : MonoBehaviour
             rigid.AddTorque(Vector3.right, ForceMode.Impulse);
             Debug.Log("적이 밀려나고 회전합ㄴㅣㄷㅏ;");
         }
+    }
 
         IEnumerator Ondamage(Vector3 reactVec)
     {
@@ -86,5 +93,15 @@ public class enemy : MonoBehaviour
             kill++;
         }
     }
+
+    void ChangeToNewSprite()
+    {
+        if (sp != null && attacksprite != null)
+        {
+            sp.sprite = attacksprite; // SpriteRenderer의 sprite 속성을 새로운 Sprite로 설정
+        }
+
+        
     }
+    
 }
