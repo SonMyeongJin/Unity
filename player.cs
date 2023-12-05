@@ -4,19 +4,40 @@ using UnityEngine;
 
 public class player : MonoBehaviour
 {
-    public float moveSpeed = 5.0f; 
-    public Camera playerCamera; 
+    public float moveSpeed = 5.0f; // 이동 속도
+    public Camera playerCamera; // 3인칭 카메라
     float horizontalInput;
     float verticalInput;
 
+    
+   
     Animator anim;
     Rigidbody rigid;
+
+   
 
     void Awake()
     {
         rigid = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
     }
+
+    void Update()
+    {
+        if (!dead)
+        {
+            GetInput();
+            Move();
+            jump();
+            eat();
+            swap();
+            shoot();
+            reroading();
+        }
+        die();
+        
+    }
+
 
     bool running;
     bool jumping;
@@ -38,21 +59,6 @@ public class player : MonoBehaviour
         swap2 = Input.GetButtonDown("Swap2");
         shooting = Input.GetButtonDown("Fire1");
         reroad = Input.GetButtonDown("Reroad");
-    }
-
-    void Update()
-    {
-        if (!dead)
-        {
-            GetInput();
-            Move();
-            jump();
-            eat();
-            swap();
-            shoot();
-            reroading();
-        }
-        die();
     }
 
     void Move()
@@ -79,8 +85,9 @@ public class player : MonoBehaviour
 
             transform.LookAt(transform.position + new Vector3(velocity.x, 0, velocity.z));
         }
+       
     }
-  
+
     public float JumpPower;
     bool Isjump;
 
@@ -92,11 +99,12 @@ public class player : MonoBehaviour
             Isjump = true;
         }
     }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "City")
         {
-            Isjump = false; //점프 중에 또 점프 못하게 하려고
+            Isjump = false;
         }
     }
 
@@ -116,8 +124,6 @@ public class player : MonoBehaviour
             Destroy(nearObject);
         }
     }
-
-    weapon equipWeapon;
 
     void swap()
     {
@@ -140,6 +146,9 @@ public class player : MonoBehaviour
             weapon[Index].SetActive(true);
         }
     }
+    weapon equipWeapon;
+
+
 
     private void OnTriggerStay(Collider other)
     {
@@ -176,7 +185,25 @@ public class player : MonoBehaviour
             anim.SetTrigger("DoBack");
         }
     }
-    
+
+
+    void alive()
+    {
+        if (health > 0)
+        { dead = false; }
+    }
+   
+
+    /* 
+    private void OnTriggerExit(Collider other)
+    {
+        if(other.tag == "Weapon")
+        {
+            nearObject = null;
+        }
+    }
+    */
+
     public float fireDelay;
     bool fireReady;
 
@@ -248,7 +275,6 @@ public class player : MonoBehaviour
 
 
     }
-
     void reroadout()
     {
         int reAmmo1 = ammo1 < equipWeapon.maxAmmo ? ammo1 : equipWeapon.maxAmmo;
@@ -261,12 +287,7 @@ public class player : MonoBehaviour
         isreroad = false;
     }
 
-    void alive()
-    {
-        dead = false;
-    }
-
-    bool dead = false;
+    public bool dead = false;
     void die()
     {
         Debug.Log("다이함수안에 들어왔어 ");
@@ -279,6 +300,9 @@ public class player : MonoBehaviour
             rigid.isKinematic = true;
 
             dead = true;
+
+         
         }
     }
-}       
+    
+}

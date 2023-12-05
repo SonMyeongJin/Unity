@@ -25,10 +25,13 @@ public class respawn : MonoBehaviour
     public float minZ = -17f; // Z 좌표 최솟값
     public float maxZ = 100f;  // Z 좌표 최댓값
 
-    
+
 
     void Start()
     {
+        
+       
+
         InvokeRepeating("Make1", 1f,1f);
         InvokeRepeating("Make2", 10f, 2f);       
     }
@@ -42,7 +45,7 @@ public class respawn : MonoBehaviour
         n4.GetComponent<enemy>().target = player.GetComponent<Transform>();
         Resources.UnloadUnusedAssets();
 
-        if (enemy.kill >= 3  && boss)
+        if (enemy.kill >= 10  && boss)
         {
             
             text1.gameObject.SetActive(true);
@@ -52,7 +55,7 @@ public class respawn : MonoBehaviour
             boss = false;
         }
 
-        if (enemy.kill >=4 && !boss && subbos)
+        if (enemy.kill >= 11 && !boss && subbos)
         {
             text2.gameObject.SetActive(true);
             Invoke("HideWarning2", 5f);
@@ -93,6 +96,8 @@ public class respawn : MonoBehaviour
         text3.gameObject.SetActive(true);
     }
 
+    public static int stage;
+
     void Make1()
     {
         float randomX = Random.Range(minX, maxX);
@@ -103,6 +108,7 @@ public class respawn : MonoBehaviour
 
         Instantiate(n1, randomPosition, Quaternion.identity);
         Debug.Log("make1 생성 ");
+        stage = 1;
     }
 
     void Make2()
@@ -115,24 +121,35 @@ public class respawn : MonoBehaviour
 
         Instantiate(n2, randomPosition, Quaternion.identity);
         Debug.Log("make2 생성 ");
+       
     }
 
+
+    
     void Make3()
     {
     
         Instantiate(n3, Vector3.zero, Quaternion.identity);
         Debug.Log("make3 생성 ");
+        stage = 2;
+        newgun.SetActive(true);
+        newgunBallet.SetActive(true);
     }
 
+
+    public GameObject newgun;
+    public GameObject newgunBallet;
     void Make4()
     {
-       
+
+        newgun.SetActive(true);
+        newgunBallet.SetActive(true);
+
         Debug.Log("make123 루프 중지");
-
-       
-
         Instantiate(n4, Vector3.zero, Quaternion.identity);
-        Debug.Log("make4 보  생성 ");
+        Debug.Log("make4 보스 생성 ");
+        stage = 3;
+        enemy.bossHealth = 200;
     }
 
  
